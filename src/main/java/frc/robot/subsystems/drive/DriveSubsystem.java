@@ -2,6 +2,7 @@ package frc.robot.subsystems.drive;
 
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
@@ -30,6 +31,12 @@ public class DriveSubsystem extends SubsystemBase {
         backLeft.restoreFactoryDefaults();
         backRight.restoreFactoryDefaults();
 
+        // Set inversions based on your robot's needs
+        frontLeft.setInverted(true);
+        frontRight.setInverted(false);
+        backLeft.setInverted(true);
+        backRight.setInverted(false);
+
         // Make back motors run at the same velocity as the front motors
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
@@ -39,6 +46,12 @@ public class DriveSubsystem extends SubsystemBase {
         frontRight.setClosedLoopRampRate(DriveConstants.kRampRateSeconds);
         backLeft.setClosedLoopRampRate(DriveConstants.kRampRateSeconds);
         backRight.setClosedLoopRampRate(DriveConstants.kRampRateSeconds);
+
+        // Set brake mode
+        frontLeft.setIdleMode(IdleMode.kBrake);
+        frontRight.setIdleMode(IdleMode.kBrake);
+        backLeft.setIdleMode(IdleMode.kBrake);
+        backRight.setIdleMode(IdleMode.kBrake);
 
         // Write the configuration to the motor
         // Everything before this is preparing, only with this call will the motors
@@ -55,17 +68,18 @@ public class DriveSubsystem extends SubsystemBase {
      * ... therefore when forward is zero, turn is zero
      * This is the default drive method in tele-op periodic
      * 
-     * @param speed            The robot's speed along the X axis [-1.0..1.0].
-     *                         Forward is positive.
-     * @param rotation         The normalized curvature [-1.0..1.0].
-     *                         Counterclockwise is positive.
-     * @param allowTurnInPlace If set, overrides constant-curvature turning for
-     *                         turn-in-place maneuvers.
-     *                         rotation will control turning rate instead of
-     *                         curvature.
+     * @param speed    The robot's speed along the X axis [-1.0..1.0].
+     *                 Forward is positive.
+     * @param rotation The normalized curvature [-1.0..1.0].
+     *                 Counterclockwise is positive.
      */
     public Command driveCommand(DoubleSupplier speed, DoubleSupplier rotation) {
-        return Commands.run(() -> drive.curvatureDrive(speed.getAsDouble(), rotation.getAsDouble(), false), this);
+        return Commands.run(() -> {
+            double speedVal = speed.getAsDouble();
+            double rotationVal = rotation.getAsDouble();
+            boolean allowTurnInPlace = speedVal == 0;
+            drive.curvatureDrive(speedVal, -rotationVal, allowTurnInPlace);
+        }, this);
     }
 
     public Command driveArcadeCommand(DoubleSupplier speed, DoubleSupplier rotation) {
