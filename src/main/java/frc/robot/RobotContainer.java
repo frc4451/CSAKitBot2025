@@ -32,7 +32,7 @@ public class RobotContainer {
 
     private void configureBindings() {
         driveSubsystem.setDefaultCommand(
-                driveSubsystem.driveCommand(
+                driveSubsystem.driveClosedLoopCommand(
                         // Negate because on controllers up is negative; up should be positive
                         () -> -driverController.getLeftY(),
                         driverController::getRightX));
