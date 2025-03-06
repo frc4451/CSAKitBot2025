@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -24,10 +23,10 @@ import frc.robot.SparkUtil;
 
 public class DriveSubsystem extends SubsystemBase {
     // Instancing motor controllers
-    private final SparkMax leftLeader = new SparkMax(DriveConstants.kFrontLeftId, MotorType.kBrushless);
-    private final SparkMax rightLeader = new SparkMax(DriveConstants.kFrontRightId, MotorType.kBrushless);
-    private final SparkMax leftFollower = new SparkMax(DriveConstants.kBackLeftId, MotorType.kBrushless);
-    private final SparkMax rightFollower = new SparkMax(DriveConstants.kBackRightId, MotorType.kBrushless);
+    private final SparkMax leftLeader = new SparkMax(DriveConstants.kFrontLeftId, DriveConstants.kMotorType);
+    private final SparkMax rightLeader = new SparkMax(DriveConstants.kFrontRightId, DriveConstants.kMotorType);
+    private final SparkMax leftFollower = new SparkMax(DriveConstants.kBackLeftId, DriveConstants.kMotorType);
+    private final SparkMax rightFollower = new SparkMax(DriveConstants.kBackRightId, DriveConstants.kMotorType);
 
     private final SparkClosedLoopController leftController = leftLeader.getClosedLoopController();
     private final SparkClosedLoopController rightController = rightLeader.getClosedLoopController();

@@ -1,12 +1,18 @@
 package frc.robot.subsystems.drive;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
+    /*
+     * Change these to what the real robot has
+     */
     public static final int kFrontLeftId = 11;
     public static final int kFrontRightId = 12;
     public static final int kBackLeftId = 15;
     public static final int kBackRightId = 16;
+    public static final MotorType kMotorType = MotorType.kBrushed;
 
     public static final double kRampRateSeconds = 0.6;
     public static final int kCurrentLimit = 60;

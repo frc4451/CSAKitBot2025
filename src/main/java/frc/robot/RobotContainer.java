@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.controllers.CommandCustomXboxController;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.roller.RollerSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,6 +26,7 @@ public class RobotContainer {
             ControllerConstants.kDriverControllerPort);
 
     private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+    private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
 
     public RobotContainer() {
         configureBindings();
@@ -36,6 +38,9 @@ public class RobotContainer {
                         // Negate because on controllers up is negative; up should be positive
                         () -> -driverController.getLeftY(),
                         driverController::getRightX));
+
+        driverController.rightTrigger().whileTrue(rollerSubsystem.runVoltsCommand(3));
+        driverController.leftTrigger().whileTrue(rollerSubsystem.runVoltsCommand(-3));
     }
 
     public Command getAutonomousCommand() {
