@@ -8,15 +8,14 @@ public class DriveConstants {
     /*
      * Change these to what the real robot has
      */
-    public static final int kFrontLeftId = 11;
-    public static final int kFrontRightId = 12;
-    public static final int kBackLeftId = 15;
-    public static final int kBackRightId = 16;
+    public static final int kFrontLeftId = 4;
+    public static final int kFrontRightId = 1;
+    public static final int kBackLeftId = 3;
+    public static final int kBackRightId = 2;
     public static final MotorType kMotorType = MotorType.kBrushed;
 
     public static final double kRampRateSeconds = 0.6;
     public static final int kCurrentLimit = 60;
-
     
     public static final double kTrackWidthMeters = Units.inchesToMeters(21.5);
     public static final double kWheelRadiusMeters = Units.inchesToMeters(3.0);
@@ -26,5 +25,4 @@ public class DriveConstants {
 
     public static final boolean kLeftInverted = false;
     public static final boolean kRightInverted = true;
-
 }

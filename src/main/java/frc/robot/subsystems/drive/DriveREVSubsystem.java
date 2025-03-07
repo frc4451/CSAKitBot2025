@@ -15,26 +15,21 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkFlex;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkUtil;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveREVSubsystem extends SubsystemBase {
     // Instancing motor controllers
     private final SparkMax leftLeader = new SparkMax(DriveConstants.kFrontLeftId, DriveConstants.kMotorType);
     private final SparkMax rightLeader = new SparkMax(DriveConstants.kFrontRightId, DriveConstants.kMotorType);
     private final SparkMax leftFollower = new SparkMax(DriveConstants.kBackLeftId, DriveConstants.kMotorType);
     private final SparkMax rightFollower = new SparkMax(DriveConstants.kBackRightId, DriveConstants.kMotorType);
 
-    private final SparkClosedLoopController leftController = leftLeader.getClosedLoopController();
-    private final SparkClosedLoopController rightController = rightLeader.getClosedLoopController();
-
-    private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
-    private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
-
-    public DriveSubsystem() {
+    public DriveREVSubsystem() {
         configureMotors();
     }
 
@@ -85,74 +80,30 @@ public class DriveSubsystem extends SubsystemBase {
                 () -> rightFollower.configure(config, ResetMode.kResetSafeParameters,
                         PersistMode.kPersistParameters));
 
-        SparkUtil.tryUntilOk(
-        leftLeader,
-        5,
-        () -> leftEncoder.setPosition(0));
-
-        SparkUtil.tryUntilOk(
-        rightLeader,
-        5,
-        () -> rightEncoder.setPosition(0));
-    }
-
-    @Override
-    public void periodic() {
-        {
-            String logRoot = getName() + "/Left/";
-            SmartDashboard.putNumber(logRoot + "Velocity", this.leftEncoder.getVelocity());
-            SmartDashboard.putNumber(logRoot + "AppliedVolts", this.leftLeader.getBusVoltage() * this.leftLeader.getAppliedOutput());
-            SmartDashboard.putNumberArray(logRoot + "CurrentAmps", new double[] { 
-                leftLeader.getOutputCurrent(), 
-                leftFollower.getOutputCurrent()
-            });
-        }
-        {
-            String logRoot = getName() + "/Right/";
-            SmartDashboard.putNumber(logRoot + "Velocity", this.rightEncoder.getVelocity());
-            SmartDashboard.putNumber(logRoot + "AppliedVolts", this.rightLeader.getBusVoltage() * this.rightLeader.getAppliedOutput());
-            SmartDashboard.putNumberArray(logRoot + "CurrentAmps", new double[] { 
-                rightLeader.getOutputCurrent(), 
-                rightFollower.getOutputCurrent()
-            });
-        }
-
-    }
-
-    public void driveClosedLoop(double forward, double rotation) {
-        WheelSpeeds speeds = (forward != 0)
-            ? DifferentialDrive.curvatureDriveIK(
-                forward * Math.abs(forward),
-                rotation * Math.abs(rotation) / 1.4, false)
-            : DifferentialDrive.arcadeDriveIK(
-                0,
-                rotation / 2,
-                true);
-        
-        runClosedLoop(
-                speeds.left * DriveConstants.kMaxSpeed,
-                speeds.right * DriveConstants.kMaxSpeed);
     }
     
-    /** Command for controlling to drivetrain */
-    public Command driveClosedLoopCommand(DoubleSupplier forward, DoubleSupplier rotation) {
-        return Commands.run(() -> driveClosedLoop(forward.getAsDouble(), rotation.getAsDouble()), this);
+    @Override
+    public void periodic() {
+    }
+
+    public Command driveOpenLoopCommand(DoubleSupplier forward, DoubleSupplier rotation) {
+        return Commands.run(() -> {
+            double speedVal = forward.getAsDouble();
+            double rotationVal = rotation.getAsDouble();
+            boolean allowTurnInPlace = speedVal == 0;
+            WheelSpeeds drive = DifferentialDrive.arcadeDriveIK(speedVal, rotationVal, allowTurnInPlace);
+            runClosedLoop(drive.left, drive.right);
+        //     drive.curvatureDrive(speedVal, -rotationVal, allowTurnInPlace);
+        }, this);
+    }
+
+    public void runClosedLoop(double left, double right) {
+        leftLeader.set(left);
+        rightLeader.set(right);
     }
 
     public void runOpenLoop(double leftVolts, double rightVolts) {
         leftLeader.setVoltage(leftVolts);
         rightLeader.setVoltage(rightVolts);
-    }
-
-    public void runClosedLoop(double leftMetersPerSec, double rightMetersPerSec) {
-        double leftRadPerSec = leftMetersPerSec / DriveConstants.kWheelRadiusMeters;
-        double rightRadPerSec = rightMetersPerSec / DriveConstants.kWheelRadiusMeters;
-        
-        this.setVelocity(leftRadPerSec, rightRadPerSec);
-    }
-
-    public void setVelocity(double leftRadPerSec, double rightRadPerSec) {
-        leftController.setReference(leftRadPerSec, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-        rightController.setReference(rightRadPerSec, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 }
