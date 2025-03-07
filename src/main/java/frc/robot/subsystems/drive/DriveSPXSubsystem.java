@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,7 +53,7 @@ public class DriveSPXSubsystem extends SubsystemBase {
     }
 
     public void runOpenLoop(double leftPercent, double rightPercent) {
-        leftLeader.set(VictorSPXControlMode.PercentOutput, leftPercent);
-        rightLeader.set(VictorSPXControlMode.PercentOutput, rightPercent);
+        leftLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(leftPercent*2, -1, 1));
+        rightLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(rightPercent*2, -1, 1));
     }
 }
