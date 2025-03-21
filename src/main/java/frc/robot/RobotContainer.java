@@ -47,6 +47,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return driveSubsystem.driveOpenLoopCommand(() -> 0.5, () -> 0).withTimeout(1);
+        // return Commands.print("No autonomous command configured");
     }
 }
