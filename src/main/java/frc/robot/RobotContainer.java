@@ -29,8 +29,8 @@ public class RobotContainer {
 
     private final CommandCustomXboxController driverController = new CommandCustomXboxController(ControllerConstants.kDriverControllerPort);
 
-    private final DriveREVSubsystem driveSubsystem = new DriveREVSubsystem();
-    // private final DriveSPXSubsystem driveSubsystem = new DriveSPXSubsystem();
+    // private final DriveREVSubsystem driveSubsystem = new DriveREVSubsystem();
+    private final DriveSPXSubsystem driveSubsystem = new DriveSPXSubsystem();
     // private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
 
     public RobotContainer() {
