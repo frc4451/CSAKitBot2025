@@ -10,3 +10,6 @@ https://github.com/frc4451/Finn2025
 Free for use for teams in FIRST that are running a KitBot.
 
 If you're in FIRST SC, please consult your local CSA.
+
+With help from:
+- FRC Team 342
