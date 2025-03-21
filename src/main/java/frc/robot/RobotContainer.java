@@ -25,10 +25,12 @@ import frc.robot.subsystems.drive.DriveSPXSubsystem;
 public class RobotContainer {
     // Replace with CommandPS4Controller or CommandJoystick if needed
     // private final CommandCustomXboxController driverController = new CommandCustomXboxController(ControllerConstants.kDriverControllerPort);
-    private final CommandJoystick driverController = new CommandJoystick(ControllerConstants.kDriverControllerPort);
+    // private final CommandJoystick driverController = new CommandJoystick(ControllerConstants.kDriverControllerPort);
 
-    // private final DriveREVSubsystem driveSubsystem = new DriveREVSubsystem();
-    private final DriveSPXSubsystem driveSubsystem = new DriveSPXSubsystem();
+    private final CommandCustomXboxController driverController = new CommandCustomXboxController(ControllerConstants.kDriverControllerPort);
+
+    private final DriveREVSubsystem driveSubsystem = new DriveREVSubsystem();
+    // private final DriveSPXSubsystem driveSubsystem = new DriveSPXSubsystem();
     // private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
 
     public RobotContainer() {
@@ -39,8 +41,8 @@ public class RobotContainer {
         driveSubsystem.setDefaultCommand(
                 driveSubsystem.driveOpenLoopCommand(
                         // Negate because on controllers up is negative; up should be positive
-                        () -> -driverController.getY(),
-                        () -> driverController.getZ()));
+                        () -> -driverController.getLeftY(),
+                        () -> driverController.getRightX()));
 
         // driverController.rightTrigger().whileTrue(rollerSubsystem.runVoltsCommand(3));
         // driverController.leftTrigger().whileTrue(rollerSubsystem.runVoltsCommand(-3));

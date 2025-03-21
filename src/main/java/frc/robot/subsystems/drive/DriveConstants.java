@@ -21,7 +21,7 @@ public class DriveConstants {
     public static final double kWheelRadiusMeters = Units.inchesToMeters(3.0);
     public static final double kMotorReduction = 8.45;
 
-    public static final double kMaxSpeed = 5.2;
+    public static final double kMaxSpeed = 3;
 
     public static final boolean kLeftInverted = false;
     public static final boolean kRightInverted = true;
