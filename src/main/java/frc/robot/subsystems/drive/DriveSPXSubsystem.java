@@ -53,7 +53,7 @@ public class DriveSPXSubsystem extends SubsystemBase {
     }
 
     public void runOpenLoop(double leftPercent, double rightPercent) {
-        leftLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(leftPercent*2, -1, 1));
-        rightLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(rightPercent*2, -1, 1));
+        leftLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(leftPercent*2, -.58, .58));
+        rightLeader.set(VictorSPXControlMode.PercentOutput, MathUtil.clamp(rightPercent*2, -.58, .58));
     }
 }

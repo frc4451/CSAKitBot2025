@@ -23,6 +23,6 @@ public class DriveConstants {
 
     public static final double kMaxSpeed = 3;
 
-    public static final boolean kLeftInverted = false;
-    public static final boolean kRightInverted = true;
+    public static final boolean kLeftInverted = true;
+    public static final boolean kRightInverted = false;
 }
