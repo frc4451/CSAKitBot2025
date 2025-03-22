@@ -68,7 +68,7 @@ public class RobotContainer {
                 driveSubsystem.driveOpenLoopCommand(
                         // Negate because on controllers up is negative; up should be positive
                         () -> -driverController.getLeftY(),
-                        () -> driverController.getRightX()));
+                        () -> -driverController.getRightY()));
 
         // driverController.rightTrigger().whileTrue(rollerSubsystem.runVoltsCommand(3));
         // driverController.leftTrigger().whileTrue(rollerSubsystem.runVoltsCommand(-3));

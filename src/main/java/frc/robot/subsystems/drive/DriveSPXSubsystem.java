@@ -42,12 +42,12 @@ public class DriveSPXSubsystem extends SubsystemBase {
     public void periodic() {
     }
 
-    public Command driveOpenLoopCommand(DoubleSupplier forward, DoubleSupplier rotation) {
+    public Command driveOpenLoopCommand(DoubleSupplier forwardLeft, DoubleSupplier forwardRight) {
         return Commands.run(() -> {
-            double speedVal = forward.getAsDouble();
-            double rotationVal = rotation.getAsDouble();
-            boolean allowTurnInPlace = speedVal == 0;
-            WheelSpeeds drive = DifferentialDrive.arcadeDriveIK(speedVal, rotationVal, allowTurnInPlace);
+            double leftSpeedVal = forwardLeft.getAsDouble();
+            double rightSpeedVal = forwardRight.getAsDouble();
+            boolean decreaseSensitivity = Math.abs(leftSpeedVal) < .2 && Math.abs(rightSpeedVal) < .2;
+            WheelSpeeds drive = DifferentialDrive.tankDriveIK(leftSpeedVal, rightSpeedVal, decreaseSensitivity);
             runOpenLoop(drive.left, drive.right);
         }, this);
     }
