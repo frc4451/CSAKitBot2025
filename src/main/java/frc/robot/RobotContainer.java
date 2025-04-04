@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import org.opencv.core.Point;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.controllers.CommandCustomXboxController;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.DriveREVSubsystem;
 import frc.robot.subsystems.drive.DriveSPXSubsystem;
 
@@ -28,10 +34,19 @@ public class RobotContainer {
     // private final CommandJoystick driverController = new CommandJoystick(ControllerConstants.kDriverControllerPort);
 
     private final CommandCustomXboxController driverController = new CommandCustomXboxController(ControllerConstants.kDriverControllerPort);
+    private final XboxController climbController = new XboxController(ControllerConstants.CLIMB_CONTROLLER_PORT);
 
     private final DriveREVSubsystem driveSubsystem = new DriveREVSubsystem();
     // private final DriveSPXSubsystem driveSubsystem = new DriveSPXSubsystem();
     // private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
+
+    private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+
+    private final Command moveClimberUp = Commands.startEnd(() -> {climberSubsystem.climb(0.5);}, () -> {climberSubsystem.climb(0);}, climberSubsystem);
+    private final Command moveClimberDown = Commands.startEnd(() -> {climberSubsystem.climb(-0.5);}, () -> {climberSubsystem.climb(0);}, climberSubsystem);
+
+    private final POVButton climberUpButton = new POVButton(climbController, 0);
+    private final POVButton climberDownButton = new POVButton(climbController, 180);
 
     public RobotContainer() {
         configureBindings();
@@ -43,6 +58,9 @@ public class RobotContainer {
                         // Negate because on controllers up is negative; up should be positive
                         () -> -driverController.getLeftY(),
                         () -> driverController.getRightX()));
+
+        climberUpButton.whileTrue(moveClimberUp);
+        climberDownButton.whileTrue(moveClimberDown);
 
         // driverController.rightTrigger().whileTrue(rollerSubsystem.runVoltsCommand(3));
         // driverController.leftTrigger().whileTrue(rollerSubsystem.runVoltsCommand(-3));

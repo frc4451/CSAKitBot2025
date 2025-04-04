@@ -19,5 +19,6 @@ package frc.robot;
 public final class Constants {
     public static class ControllerConstants {
         public static final int kDriverControllerPort = 0;
+        public static final int CLIMB_CONTROLLER_PORT = 1;
     }
 }
